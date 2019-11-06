@@ -1,7 +1,9 @@
 package com.example.CitizensAppeals.domain;
 
+import com.example.CitizensAppeals.repository.CategoryAppealsRepository;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +27,9 @@ public class Appeal {
 
     @Column(updatable = false)
     private String username;
+
+    @Column(updatable = false)
+    private String idCategory;
 
     public String getUsername() {
         return username;
@@ -56,5 +61,13 @@ public class Appeal {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(String idCategory) {
+        this.idCategory = idCategory;
     }
 }

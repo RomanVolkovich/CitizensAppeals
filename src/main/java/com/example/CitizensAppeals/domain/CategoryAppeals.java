@@ -1,20 +1,26 @@
-//package com.example.CitizensAppeals.domain;
-//
-//import lombok.Data;
-//import lombok.EqualsAndHashCode;
-//import lombok.ToString;
-//
-//import javax.persistence.*;
-//
-//@Entity
-//@Data
-//@Table(name = "Category")
-//@ToString(of = {"category"})
-//@EqualsAndHashCode(of = {"id"})
-//public class CategoryAppeal {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private int id;
-//
-//    private String category;
-//}
+package com.example.CitizensAppeals.domain;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+import javax.persistence.*;
+
+@Entity
+@Getter
+@Table(name = "Category")
+@ToString(of = {"id", "textCategory"})
+@EqualsAndHashCode(of = {"id"})
+public class CategoryAppeals {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false)
+    private long id;
+
+    @Column(updatable = false)
+    private String textCategory;
+
+    public String getTextCategory() {
+        return textCategory;
+    }
+}

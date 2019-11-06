@@ -2,6 +2,7 @@ package com.example.CitizensAppeals.controller;
 
 import com.example.CitizensAppeals.domain.Appeal;
 import com.example.CitizensAppeals.repository.AppealRepository;
+import com.example.CitizensAppeals.repository.CategoryAppealsRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,15 +15,23 @@ import java.util.List;
 @RestController
 @RequestMapping("appeal")
 public class AppealsController {
-    @Autowired
+
     private final AppealRepository appealRepository;
 
-    public AppealsController(AppealRepository appealRepository) {
+    private final CategoryAppealsRepository categoryAppealsRepository;
+
+    public AppealsController(AppealRepository appealRepository, CategoryAppealsRepository categoryAppealsRepository) {
         this.appealRepository = appealRepository;
+        this.categoryAppealsRepository = categoryAppealsRepository;
     }
 
+
     @GetMapping
-    public List<Appeal> list(){
+    public List<Appeal> listAppeals(){
+        for (Appeal appeal: appealRepository.findAll()){
+            String idCategory = appeal.getIdCategory();
+            appeal.setIdCategory(categoryAppealsRepository.findById(Long.parseLong(idCategory)).get().getTextCategory());
+        }
         return appealRepository.findAll();
     }
 
@@ -44,7 +53,7 @@ public class AppealsController {
             @PathVariable("id") Appeal appealFromDB,
             @RequestBody Appeal appeal
     ){
-        BeanUtils.copyProperties(appeal, appealFromDB, "id", "creationDate", "username");
+        BeanUtils.copyProperties(appeal, appealFromDB, "id", "creationDate", "username", "category");
 
         return appealRepository.save(appealFromDB);
     }

@@ -14,7 +14,8 @@ Vue.component('appeal-form', {
     data: function(){
         return {
             text: '',
-            id: ''
+            id: '',
+            idCategory: ''
         }
     },
     watch: {
@@ -33,7 +34,22 @@ Vue.component('appeal-form', {
                               '<h5 class="modal-title" id="exampleModalLongTitle">Регистрация нового обращения</h5>' +
                             '</div>' +
                             '<div class="modal-body">' +
-                                '<input type="text" placeholder="Введите текст обращения" v-model="text"/> ' +
+                                '<form>' +
+                                    '<div class="form-group">' +
+                                    '<label for="textAppeal">Введите суть обращения</label>' +
+                                        '<textarea class="form-control" id="textAppeal" placeholder="Введите текст обращения" v-model="text" rows="5"></textarea>' +
+                                    '</div>' +
+                                    '<div class="form-group">' +
+                                        '<label for="exampleFormControlSelect1">Выберите категорию обращения</label>' +
+                                        '<select class="form-control" id="exampleFormControlSelect1" v-model="idCategory">' +
+                                            '<option>1</option>' +
+                                            '<option>2</option>' +
+                                            '<option>3</option>' +
+                                            '<option>4</option>' +
+                                            '<option>5</option>' +
+                                        '</select>' +
+                                    '</div>' +
+                                '</form>' +
                             '</div>' +
                             '<div class="modal-footer">' +
                               '<button type="button" class="btn btn-secondary" data-dismiss="modal" @click="clear">Отменить</button>' +
@@ -61,8 +77,7 @@ Vue.component('appeal-form', {
                 '</div>',
     methods: {
         save: function() {
-            var appeal = {text: this.text};
-            console.log(this.id);
+            var appeal = {text: this.text, idCategory: this.idCategory};
 
             //Если есть id -> обновляем (PUT)
             if(this.id){
@@ -94,7 +109,12 @@ Vue.component('appeal-form', {
 Vue.component ('appeal-row', {
     props: ['appeal', 'editAppeal', 'appeals'],
     template:   '<div class="card border-dark">' +
-                    '<div class="card-header" style="background-color: #3E97D1;">Номер обращения: {{ appeal.id }}</div>' +
+                    '<div class="card-header" style="background-color: #3E97D1;">' +
+                        '<ul class="list-group list-group-flush">' +
+                            '<li class="list-group-item pt-0 pb-0">Номер обращения: {{ appeal.id }}</li>' +
+                            '<li class="list-group-item pt-0 pb-0"><small class="text-muted"> Категория обращения: {{ appeal.idCategory }} </small></li>' +
+                        '</ul>' +
+                    '</div>' +
                     '<div class="card-body">' +
                         '<p class="card-text">{{ appeal.text }}</p>' +
                     '</div>' +
@@ -172,6 +192,6 @@ var app = new Vue({
                     '<appeals-list :appeals="appeals"/>' +
                 '</div>',
     data: {
-        appeals: []
+        appeals: [],
     }
 });

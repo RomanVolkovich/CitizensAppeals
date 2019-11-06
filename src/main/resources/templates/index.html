@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://thymeleaf.org ">
+<head>
+    <meta charset="UTF-8">
+    <title>Обращения граждан в организацию</title>
+    <!--VueJS-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--VueJS Resource-->
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script th:inline="javascript">
+        var frontendData = [[${frontendData}]]
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-dark" style="background-color: #3E97D1;">
+        <a class="navbar-brand" href="/">Система регистрации обращений граждан</a>
+<!--        <div th:if="${param.logout}">-->
+<!--            Пользователь: [[${#httpServletRequest.remoteUser}]]-->
+<!--        </div>-->
+        <form th:action="@{/logout}" method="post" class="form-inline my-2 my-lg-10" >
+            <input type="submit" value="Выйти" class="form-control mr-sm-2"/>
+        </form>
+    </nav>
+    <div id="app">
+
+    </div>
+</div>
+
+<!--locale scripts-->
+<script src="./js/index.js"></script>
+
+<!--Bootstrap-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

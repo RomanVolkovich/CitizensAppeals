@@ -1,5 +1,6 @@
 var appealsAPI = Vue.resource('appeal{/id}');
 
+//Функция поиска зарегистрированного обращения по выбранному обращению (сравнение по id)
 function getIndex(list, id){
     for (var i = 0; i < list.length; i++) {
         if (list[i].id === id){
@@ -9,8 +10,9 @@ function getIndex(list, id){
     return -1;
 }
 
+//Формы регистрации и редактирования обращений
 Vue.component('appeal-form', {
-    props: ['appeals', 'appealAttr'],
+    props: ['appeals', 'appeal', 'appealAttr', 'category'],
     data: function(){
         return {
             text: '',
@@ -22,32 +24,31 @@ Vue.component('appeal-form', {
         appealAttr: function (newValue, oldValue) {
             this.text = newValue.text;
             this.id = newValue.id;
+            this.idCategory = newValue.idCategory;
         }
     },
     //карточки записей
     template:   '<div>' +
+
+                    //Форма регистрации сообщения
                     '<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#reg-modal">Зарегистрировать новое обращение</button>' +
                     '<div class="modal fade" id="reg-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
-                        '<div class="modal-dialog modal-dialog-centered" role="document">' +
+                        '<div class="modal-dialog modal-lg modal-dialog-centered" role="document">' +
                           '<div class="modal-content">' +
                             '<div class="modal-header">' +
-                              '<h5 class="modal-title" id="exampleModalLongTitle">Регистрация нового обращения</h5>' +
+                                '<h5 class="modal-title" id="exampleModalLongTitle">Регистрация нового обращения</h5>' +
                             '</div>' +
                             '<div class="modal-body">' +
                                 '<form>' +
                                     '<div class="form-group">' +
-                                    '<label for="textAppeal">Введите суть обращения</label>' +
-                                        '<textarea class="form-control" id="textAppeal" placeholder="Введите текст обращения" v-model="text" rows="5"></textarea>' +
-                                    '</div>' +
-                                    '<div class="form-group">' +
                                         '<label for="exampleFormControlSelect1">Выберите категорию обращения</label>' +
                                         '<select class="form-control" id="exampleFormControlSelect1" v-model="idCategory">' +
-                                            '<option>1</option>' +
-                                            '<option>2</option>' +
-                                            '<option>3</option>' +
-                                            '<option>4</option>' +
-                                            '<option>5</option>' +
+                                            '<option v-for="(categ, index) in category" v-if="index > 0" :value="index"> {{ index }}. {{ categ }} </option>' +
                                         '</select>' +
+                                    '</div>' +
+                                    '<div class="form-group">' +
+                                        '<label for="textAppeal">Введите описание обращения</label>' +
+                                            '<textarea class="form-control" id="textAppeal" placeholder="Введите описание обращения" v-model="text" rows="10"></textarea>' +
                                     '</div>' +
                                 '</form>' +
                             '</div>' +
@@ -58,14 +59,23 @@ Vue.component('appeal-form', {
                           '</div>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="modal fade" id="update-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
+
+                    //Форма редактирования обращения
+                    '<div class="modal fade modal-lg" id="update-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">' +
                         '<div class="modal-dialog modal-dialog-centered" role="document">' +
                           '<div class="modal-content">' +
                             '<div class="modal-header">' +
-                              '<h5 class="modal-title" id="exampleModalLongTitle">Изменение обращения</h5>' +
+                                '<span><h5 class="modal-title" id="exampleModalLongTitle">Изменение обращения:</h5></span>' +
+                            '</div>' +
+                            '<div class="modal-header">' +
+                                '<span><h6 class="pt-0 pb-0">Номер обращения: {{ id }}</h6></span>' +
                             '</div>' +
                             '<div class="modal-body">' +
-                                '<input type="text" placeholder="Введите текст обращения" v-model="text"/> ' +
+                                '<label for="exampleFormControlSelect1">Выберите категорию обращения</label>' +
+                                '<select class="form-control" id="exampleFormControlSelect1" v-model="idCategory">' +
+                                    '<option v-for="(categ, index) in category" v-if="index > 0" :value="index"> {{ index }}. {{ categ }} </option>' +
+                                '</select>' +
+                                '<textarea class="form-control" id="textAppeal" placeholder="Введите описание обращения" v-model="text" rows="10"></textarea>' +
                             '</div>' +
                             '<div class="modal-footer">' +
                               '<button type="button" class="btn btn-secondary" data-dismiss="modal" @click="clear">Отменить</button>' +
@@ -101,19 +111,21 @@ Vue.component('appeal-form', {
         },
         clear: function() {
             this.text = '';
-            this.id = ''
+            this.id = '';
+            this.idCategory = ''
         }
     }
 });
 
+//Отображение обращений в виде карточек
 Vue.component ('appeal-row', {
-    props: ['appeal', 'editAppeal', 'appeals'],
+    props: ['appeal', 'editAppeal', 'appeals', 'category'],
     template:   '<div class="card border-dark">' +
                     '<div class="card-header" style="background-color: #3E97D1;">' +
-                        '<ul class="list-group list-group-flush">' +
-                            '<li class="list-group-item pt-0 pb-0">Номер обращения: {{ appeal.id }}</li>' +
-                            '<li class="list-group-item pt-0 pb-0"><small class="text-muted"> Категория обращения: {{ appeal.idCategory }} </small></li>' +
-                        '</ul>' +
+                        '<h5 class="pt-0 pb-0">Номер обращения: {{ appeal.id }}</h5>' +
+                        '<span class="pt-0 pb-0"><small class="text-white">' +
+                            'Категория обращения: {{ appeal.idCategory }}. {{ category[appeal.idCategory] }}</small>' +
+                        '</span>' +
                     '</div>' +
                     '<div class="card-body">' +
                         '<p class="card-text">{{ appeal.text }}</p>' +
@@ -157,27 +169,29 @@ Vue.component ('appeal-row', {
 });
 
 Vue.component ('appeals-list', {
-    props: ['appeals'],
+    props: ['appeals', 'category'],
     data: function(){
         return {
             appeal: null
         }
     },
     template:   '<div class="mt-3">' +
-                    '<appeal-form :appeals="appeals" :appealAttr="appeal"/>' +
+                    '<appeal-form :appeals="appeals" :appeal="appeal" :category="category" :appealAttr="appeal"/>' +
                     '<h3 class="mt-2 text-center">Список зарегистрированных обращений</h3>' +
                     '<div class="card-columns">' +
                         '<appeal-row v-for="appeal in appeals" :key="appeal.id"' +
-                        ':appeal="appeal" :editAppeal="editAppeal" :appeals="appeals"/>' +
+                        ':appeal="appeal" :editAppeal="editAppeal" :category="category" :appeals="appeals"/>' +
                     '</div>' +
                 '</div>',
-    //Отображение карточек записей (GET)
+    //Отображение карточек записей и загрузка категорий (GET)
     created: function() {
         appealsAPI.get().then(result =>
-            result.json().then(data =>
-                data.forEach(appeal => this.appeals.push(appeal))
+            result.json().then(data => {
+                data[0].forEach(appeal => this.appeals.push(appeal));
+                data[1].forEach(categoryAppeals => this.category.push(categoryAppeals.textCategory))
+            }
             )
-        )
+        );
     },
     methods: {
         editAppeal: function(appeal){
@@ -189,9 +203,10 @@ Vue.component ('appeals-list', {
 var app = new Vue({
     el: '#app',
     template:   '<div>' +
-                    '<appeals-list :appeals="appeals"/>' +
+                    '<appeals-list :appeals="appeals" :category="category"/>' +
                 '</div>',
     data: {
         appeals: [],
+        category: [null]
     }
 });

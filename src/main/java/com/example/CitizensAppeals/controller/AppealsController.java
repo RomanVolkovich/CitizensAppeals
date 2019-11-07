@@ -1,6 +1,7 @@
 package com.example.CitizensAppeals.controller;
 
 import com.example.CitizensAppeals.domain.Appeal;
+import com.example.CitizensAppeals.domain.CategoryAppeals;
 import com.example.CitizensAppeals.repository.AppealRepository;
 import com.example.CitizensAppeals.repository.CategoryAppealsRepository;
 import org.springframework.beans.BeanUtils;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,14 +27,14 @@ public class AppealsController {
         this.categoryAppealsRepository = categoryAppealsRepository;
     }
 
-
     @GetMapping
-    public List<Appeal> listAppeals(){
-        for (Appeal appeal: appealRepository.findAll()){
-            String idCategory = appeal.getIdCategory();
-            appeal.setIdCategory(categoryAppealsRepository.findById(Long.parseLong(idCategory)).get().getTextCategory());
-        }
-        return appealRepository.findAll();
+    public List<Object> listAppeals(){
+        List<Object> resultList = new ArrayList<>();
+        List<Appeal> listAppeal = appealRepository.findAll();
+        List<CategoryAppeals> listCategory = categoryAppealsRepository.findAll();
+        resultList.add(listAppeal);
+        resultList.add(listCategory);
+        return resultList;
     }
 
     @GetMapping("{id}")

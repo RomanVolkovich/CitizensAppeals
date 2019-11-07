@@ -55,7 +55,7 @@ public class AppealsController {
             @PathVariable("id") Appeal appealFromDB,
             @RequestBody Appeal appeal
     ){
-        BeanUtils.copyProperties(appeal, appealFromDB, "id", "creationDate", "username", "category");
+        BeanUtils.copyProperties(appeal, appealFromDB, "id", "creationDate", "username");
 
         return appealRepository.save(appealFromDB);
     }
